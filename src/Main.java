@@ -1,80 +1,136 @@
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Scanner;
+
+interface Solver {
+    void solve(Scanner scanner);
+}
+
+class Soal1Solver implements Solver {
+    @Override
+    public void solve(Scanner scanner) {
+        if (scanner.hasNextInt()) {
+            int a = scanner.nextInt();
+            if (scanner.hasNextInt()) {
+                int b = scanner.nextInt();
+                int sum = a + b;
+                boolean overflow = false;
+
+                // Logika deteksi overflow untuk integer
+                if (a > 0 && b > 0 && sum < 0) {
+                    overflow = true;
+                } else if (a < 0 && b < 0 && sum >= 0) {
+                    overflow = true;
+                }
+
+                if (overflow) {
+                    System.out.println("OVERFLOW");
+                } else {
+                    System.out.println(sum);
+                }
+            }
+        }
+    }
+}
+
+class Soal2Solver implements Solver {
+    @Override
+    public void solve(Scanner scanner) {
+        if (scanner.hasNextDouble()) {
+            double x = scanner.nextDouble();
+            if (scanner.hasNextDouble()) {
+                double y = scanner.nextDouble();
+                
+                // Hitung jumlah dalam presisi double
+                double sumDouble = x + y;
+                
+                // Cast hasil jumlah ke float (di sini kehilangan presisi terjadi)
+                float sumFloat = (float) sumDouble;
+                
+                // Hitung selisih mutlak antara double dan float
+                // Kita cast sumFloat kembali ke double untuk pengurangan yang adil
+                double diff = Math.abs(sumDouble - (double) sumFloat);
+                
+                System.out.printf("%.6f%n", diff);
+            }
+        }
+    }
+}
+
+class Soal3Solver implements Solver {
+    @Override
+    public void solve(Scanner scanner) {
+        if (scanner.hasNextInt()) {
+            int n = scanner.nextInt();
+            Integer a = n;
+            Integer b = a;
+            a = a + 1; // Auto-boxing menciptakan objek baru, sehingga referensi berbeda
+            
+            System.out.println("==: " + (a == b));
+            System.out.println("equals: " + a.equals(b));
+        }
+    }
+}
+
+class Soal4Solver implements Solver {
+    @Override
+    public void solve(Scanner scanner) {
+        if (scanner.hasNext()) {
+            String s = scanner.next();
+            String a = s;
+            String b = new String(s); // Memaksa pembuatan objek baru di memory (heap)
+            a = a + "X";
+
+            System.out.println("==: " + (a == b));
+            System.out.println("equals: " + a.equals(b));
+        }
+    }
+}
+
+class Soal5Solver implements Solver {
+    @Override
+    public void solve(Scanner scanner) {
+        if (scanner.hasNextInt()) {
+            int num = scanner.nextInt();
+            if (scanner.hasNextDouble()) {
+                double dbl = scanner.nextDouble();
+                if (scanner.hasNextBoolean()) {
+                    boolean bool = scanner.nextBoolean();
+                    double result = num * dbl;
+                    if (!bool) {
+                        result = result * -1;
+                    }
+                    System.out.printf("%.2f%n", result);
+                }
+            }
+        }
+    }
+}
 
 public class Main {
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+        // Gunakan US Locale agar input double menggunakan titik (.) bukan koma (,)
+        Scanner scanner = new Scanner(System.in).useLocale(Locale.US);
+        Map<String, Solver> solvers = new HashMap<>();
 
-        String soal = sc.next();
+        solvers.put("Soal1", new Soal1Solver());
+        solvers.put("Soal2", new Soal2Solver());
+        solvers.put("Soal3", new Soal3Solver());
+        solvers.put("Soal4", new Soal4Solver());
+        solvers.put("Soal5", new Soal5Solver());
 
-        switch (soal) {
+        if (scanner.hasNext()) {
+            String command = scanner.next();
+            Solver solver = solvers.get(command);
 
-            case "Soal1": {
-                int a = sc.nextInt();
-                int b = sc.nextInt();
-
-                if ((b > 0 && a > Integer.MAX_VALUE - b) ||
-                    (b < 0 && a < Integer.MIN_VALUE - b)) {
-                    System.out.println("OVERFLOW");
-                } else {
-                    System.out.println(a + b);
-                }
-                break;
-            }
-
-            case "Soal2": {
-                double x = sc.nextDouble();
-                double y = sc.nextDouble();
-
-                float fsum = (float)x + (float)y;
-                double dsum = x + y;
-
-                double diff = Math.abs(fsum - dsum);
-                System.out.printf("%.6f\n", diff);
-                break;
-            }
-
-            case "Soal3": {
-                int N = sc.nextInt();
-
-                Integer a = N;
-                Integer b = a;
-
-                a = a + 1;
-
-                System.out.println("==: " + (a == b));
-                System.out.println("equals: " + a.equals(b));
-                break;
-            }
-
-            case "Soal4": {
-                String S = sc.next();
-
-                String a = S;
-                String b = new String(S);
-
-                a = a + "X";
-
-                System.out.println("==: " + (a == b));
-                System.out.println("equals: " + a.equals(b));
-                break;
-            }
-
-            case "Soal5": {
-                int i = Integer.parseInt(sc.next());
-                double d = Double.parseDouble(sc.next());
-                boolean bool = Boolean.parseBoolean(sc.next());
-
-                double hasil = i * d;
-
-                if (!bool) {
-                    hasil *= -1;
-                }
-
-                System.out.printf("%.2f\n", hasil);
-                break;
+            if (solver != null) {
+                solver.solve(scanner);
+            } else {
+                System.out.println("Soal tidak ditemukan!");
             }
         }
 
-        sc.close();
+        scanner.close();
     }
 }

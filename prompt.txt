@@ -1,2 +1,4 @@
 memasukkan soal 
 memperbaiki kodenya
+memperbaiki kembali kode-kodenya
+memperbaiki kembali kode yang masih salah
