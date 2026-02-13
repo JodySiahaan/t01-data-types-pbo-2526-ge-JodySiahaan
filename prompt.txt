@@ -2,3 +2,4 @@ memasukkan soal
 memperbaiki kodenya
 memperbaiki kembali kode-kodenya
 memperbaiki kembali kode yang masih salah
+Mencoba memperbaiki bagian problems nya agar tidak terjadi problem yang banyak

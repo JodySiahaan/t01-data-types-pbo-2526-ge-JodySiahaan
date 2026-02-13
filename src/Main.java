@@ -17,18 +17,12 @@ class Soal1Solver implements Solver {
                 int sum = a + b;
                 boolean overflow = false;
 
-                // Logika deteksi overflow untuk integer
-                if (a > 0 && b > 0 && sum < 0) {
-                    overflow = true;
-                } else if (a < 0 && b < 0 && sum >= 0) {
-                    overflow = true;
-                }
+                // Deteksi overflow int
+                if (a > 0 && b > 0 && sum < 0) overflow = true;
+                if (a < 0 && b < 0 && sum >= 0) overflow = true;
 
-                if (overflow) {
-                    System.out.println("OVERFLOW");
-                } else {
-                    System.out.println(sum);
-                }
+                if (overflow) System.out.println("OVERFLOW");
+                else System.out.println(sum);
             }
         }
     }
@@ -41,10 +35,6 @@ class Soal2Solver implements Solver {
             String inputX = scanner.next();
             String inputY = scanner.next();
 
-            // Kuncinya ada di sini:
-            // Kita hitung x+y sebagai float DAN sebagai double secara terpisah
-            // agar error akumulasi pada float terlihat jelas.
-            
             float xF = Float.parseFloat(inputX);
             float yF = Float.parseFloat(inputY);
             float sumF = xF + yF;
@@ -53,14 +43,11 @@ class Soal2Solver implements Solver {
             double yD = Double.parseDouble(inputY);
             double sumD = xD + yD;
 
-            // Selisih antara perhitungan murni float dan murni double
-            double diff = Math.abs((double)sumF - sumD);
-
+            double diff = Math.abs(sumF - sumD);
             System.out.printf("%.6f%n", diff);
         }
     }
 }
-
 
 class Soal3Solver implements Solver {
     @Override
@@ -69,8 +56,9 @@ class Soal3Solver implements Solver {
             int n = scanner.nextInt();
             Integer a = n;
             Integer b = a;
-            a = a + 1; // Auto-boxing menciptakan objek baru, sehingga referensi berbeda
-            
+            a = a + 1;
+
+            // sengaja pakai == untuk pembelajaran reference
             System.out.println("==: " + (a == b));
             System.out.println("equals: " + a.equals(b));
         }
@@ -83,7 +71,7 @@ class Soal4Solver implements Solver {
         if (scanner.hasNext()) {
             String s = scanner.next();
             String a = s;
-            String b = new String(s); // Memaksa pembuatan objek baru di memory (heap)
+            String b = s; // hilangkan new String biar tidak warning
             a = a + "X";
 
             System.out.println("==: " + (a == b));
@@ -101,10 +89,10 @@ class Soal5Solver implements Solver {
                 double dbl = scanner.nextDouble();
                 if (scanner.hasNextBoolean()) {
                     boolean bool = scanner.nextBoolean();
+
                     double result = num * dbl;
-                    if (!bool) {
-                        result = result * -1;
-                    }
+                    if (!bool) result *= -1;
+
                     System.out.printf("%.2f%n", result);
                 }
             }
@@ -114,10 +102,9 @@ class Soal5Solver implements Solver {
 
 public class Main {
     public static void main(String[] args) {
-        // Gunakan US Locale agar input double menggunakan titik (.) bukan koma (,)
         Scanner scanner = new Scanner(System.in).useLocale(Locale.US);
-        Map<String, Solver> solvers = new HashMap<>();
 
+        Map<String, Solver> solvers = new HashMap<>();
         solvers.put("Soal1", new Soal1Solver());
         solvers.put("Soal2", new Soal2Solver());
         solvers.put("Soal3", new Soal3Solver());
@@ -128,11 +115,8 @@ public class Main {
             String command = scanner.next();
             Solver solver = solvers.get(command);
 
-            if (solver != null) {
-                solver.solve(scanner);
-            } else {
-                System.out.println("Soal tidak ditemukan!");
-            }
+            if (solver != null) solver.solve(scanner);
+            else System.out.println("Soal tidak ditemukan!");
         }
 
         scanner.close();
