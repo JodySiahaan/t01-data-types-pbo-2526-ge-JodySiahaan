@@ -37,26 +37,30 @@ class Soal1Solver implements Solver {
 class Soal2Solver implements Solver {
     @Override
     public void solve(Scanner scanner) {
-        if (scanner.hasNextDouble()) {
-            double x = scanner.nextDouble();
-            if (scanner.hasNextDouble()) {
-                double y = scanner.nextDouble();
-                
-                // Hitung jumlah dalam presisi double
-                double sumDouble = x + y;
-                
-                // Cast hasil jumlah ke float (di sini kehilangan presisi terjadi)
-                float sumFloat = (float) sumDouble;
-                
-                // Hitung selisih mutlak antara double dan float
-                // Kita cast sumFloat kembali ke double untuk pengurangan yang adil
-                double diff = Math.abs(sumDouble - (double) sumFloat);
-                
-                System.out.printf("%.6f%n", diff);
-            }
+        if (scanner.hasNext()) {
+            String inputX = scanner.next();
+            String inputY = scanner.next();
+
+            // Kuncinya ada di sini:
+            // Kita hitung x+y sebagai float DAN sebagai double secara terpisah
+            // agar error akumulasi pada float terlihat jelas.
+            
+            float xF = Float.parseFloat(inputX);
+            float yF = Float.parseFloat(inputY);
+            float sumF = xF + yF;
+
+            double xD = Double.parseDouble(inputX);
+            double yD = Double.parseDouble(inputY);
+            double sumD = xD + yD;
+
+            // Selisih antara perhitungan murni float dan murni double
+            double diff = Math.abs((double)sumF - sumD);
+
+            System.out.printf("%.6f%n", diff);
         }
     }
 }
+
 
 class Soal3Solver implements Solver {
     @Override
